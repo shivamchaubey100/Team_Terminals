@@ -1,5 +1,6 @@
 from engine.main import Game
 import scriptblue
+import script
 import scriptred
 
 if __name__ == "__main__":
