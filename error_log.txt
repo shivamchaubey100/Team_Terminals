@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 307, in run_game
+    n = self.__bscript.ActPirate(pirate_i)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 175, in ActPirate
+    if 10<=ids<100:
+       ^^^^^^^^^^^
+TypeError: '<=' not supported between instances of 'int' and 'str'
