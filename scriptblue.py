@@ -142,8 +142,80 @@ Mdim= [40,40]
 # island_coord2 = [0,0]
 # island_coord3 = [0,0]
 
+def checkfriends(pirate , quad ):
+    sum = 0 
+    up = pirate.investigate_up()[1]
+    #print(up)
+    down = pirate.investigate_down()[1]
+    left = pirate.investigate_left()[1]
+    right = pirate.investigate_right()[1]
+    ne = pirate.investigate_ne()[1]
+    nw = pirate.investigate_nw()[1]
+    se = pirate.investigate_se()[1]
+    sw = pirate.investigate_sw()[1]
+    
+    if(quad=='ne'):
+        if(up == 'friend'):
+            sum +=1 
+        if(ne== 'friend'):
+            sum +=1 
+        if(right == 'friend'):
+            sum +=1 
+    if(quad=='se'):
+        if(down == 'friend'):
+            sum +=1 
+        if(right== 'friend'):
+            sum +=1 
+        if(se == 'friend'):
+            sum +=1 
+    if(quad=='sw'):
+        if(down == 'friend'):
+            sum +=1 
+        if(sw== 'friend'): 
+            sum +=1 
+        if(left == 'friend'):
+            sum +=1 
+    if(quad=='nw'):
+        if(up == 'friend'):
+            sum +=1 
+        if(nw == 'friend'):
+            sum +=1 
+        if(left == 'friend'):
+            sum +=1 
+
+    return sum
+    
+def spread(pirate):
+    sw = checkfriends(pirate ,'sw' )
+    se = checkfriends(pirate ,'se' )
+    ne = checkfriends(pirate ,'ne' )
+    nw = checkfriends(pirate ,'nw' )
+   
+    my_dict = {'sw': sw, 'se': se, 'ne': ne, 'nw': nw}
+    sorted_dict = dict(sorted(my_dict.items(), key=lambda item: item[1]))
+
+    x, y = pirate.getPosition()
+    
+    if( x == 0 , y == 0):
+        return random.randint(1,4)
+    
+    if(sorted_dict[list(sorted_dict())[3]] == 0 ):
+        return random.randint(1,4)
+    
+    if(list(sorted_dict())[0] == 'sw'):
+        return moveTo(x-1 , y+1 , pirate)
+    elif(list(sorted_dict())[0] == 'se'):
+        return moveTo(x+1 , y+1 , pirate)
+    elif(list(sorted_dict())[0] == 'ne'):
+        return moveTo(x+1 , y-1 , pirate)
+    elif(list(sorted_dict())[0] == 'nw'):
+        return moveTo(x-1 , y-1 , pirate)
+
 
 def ActPirate(pirate):
+    
+                
+    
     up = pirate.investigate_up()[0]
     down = pirate.investigate_down()[0]
     left = pirate.investigate_left()[0]
@@ -180,34 +252,41 @@ def ActPirate(pirate):
     sig= sid+ "a"
     pirate.setSignal(sig)
     ids= int(ids) 
-    if s[0] == "myCaptured" and s[1] == "myCaptured" :
-        if ids<=12:
-            signal= sid + "d" 
-            pirate.setSignal(signal)
+    
+    for i in range(3):
+        if s[i] == "myCaptured":
+            if (ids<= 6*(i+1) and ids>6*i):
+                signal= sid + "d" 
+                pirate.setSignal(signal)
+    
+    # if s[0] == "myCaptured" and s[1] == "myCaptured" :
+    #     if ids<=12:
+    #         signal= sid + "d" 
+    #         pirate.setSignal(signal)
         
-    elif s[0]=="myCaptured" and s[2]=="myCaptured":
-            if ids<=6 or 18>=ids>12:
-                signal= sid + "d" 
-                pirate.setSignal(signal)
+    # elif s[0]=="myCaptured" and s[2]=="myCaptured":
+    #         if ids<=6 or 18>=ids>12:
+    #             signal= sid + "d" 
+    #             pirate.setSignal(signal)
 
-    elif s[1]=="myCaptured" and s[2]=="myCaptured":
-            if 18>=ids>6:
-                signal= sid + "d" 
-                pirate.setSignal(signal)    
+    # elif s[1]=="myCaptured" and s[2]=="myCaptured":
+    #         if 18>=ids>6:
+    #             signal= sid + "d" 
+    #             pirate.setSignal(signal)    
 
-    elif s[0]=="myCaptured":
-            if ids<=6 :
-                signal= sid + "d" 
-                pirate.setSignal(sig)
+    # elif s[0]=="myCaptured":
+    #         if ids<=6 :
+    #             signal= sid + "d" 
+    #             pirate.setSignal(sig)
 
-    elif s[1]=="myCaptured":
-            if 12>=ids>6:
-                signal= sid + "d" 
-                pirate.setSignal(signal)
-    elif s[2]=="myCaptured":
-            if 18>=ids>12:
-                signal= sid + "d"
-                pirate.setSignal(signal)
+    # elif s[1]=="myCaptured":
+    #         if 12>=ids>6:
+    #             signal= sid + "d" 
+    #             pirate.setSignal(signal)
+    # elif s[2]=="myCaptured":
+    #         if 18>=ids>12:
+    #             signal= sid + "d"
+    #             pirate.setSignal(signal)
 
     if pirate.getID() == '1':
         return moveTo(20,20,pirate)
@@ -271,6 +350,18 @@ def ActPirate(pirate):
     # print(island_coord2)
     # print(island_coord3)
     # print(islandNameAndCoord(pirate))
+    for i in range(1,4):
+        if pirate.investigate_current()[0] == f"island{i}":
+            if pirate.trackPlayers()[i-1] != "myCaptured":
+                return 0
+    if "myCaptured" not in pirate.trackPlayers():
+        return spread(pirate)
+    else:
+        if(pirate.getSignal()[3] == 'a'):
+            signal = pirate.getSignal()
+            if(len(signal)== 4):
+                signal = signal[:4] + f'{random.randint(0,1)}'
+                pirate.setSignal(signal)
 
     
     if pirate.getTeamSignal() != "":
