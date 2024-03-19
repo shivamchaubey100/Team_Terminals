@@ -1,8 +1,7 @@
 Traceback (most recent call last):
-  File "E:\repos\Team_Terminals\engine\main.py", line 307, in run_game
-    n = self.__bscript.ActPirate(pirate_i)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\repos\Team_Terminals\scriptblue.py", line 355, in ActPirate
-    if pirate.trackplayers()[i-1] != "myCaptured":
-       ^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Pirate' object has no attribute 'trackplayers'. Did you mean: 'trackPlayers'?
+  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 294, in run_game
+    self.__bscript.ActTeam(self.__blue_team)
+  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 382, in ActTeam
+    raw_string = pirate.getTeamSignal()
+                 ^^^^^^
+NameError: name 'pirate' is not defined
