@@ -72,10 +72,10 @@ def spread(pirate):
     x, y = pirate.getPosition()
     
     if( x == 0 , y == 0):
-        return randint(1,4)
+        return random.randint(1,4)
     
     if(sorted_dict[list(sorted_dict())[3]] == 0 ):
-        return randint(1,4)
+        return random.randint(1,4)
     
     if(list(sorted_dict())[0] == 'sw'):
         return moveTo(x-1 , y+1 , pirate)
@@ -328,9 +328,13 @@ def ActPirate(pirate):
     
     for i in range(3):
         if s[i] == "myCaptured":
-            if (ids<= 6*(i+1) and ids>6*i):
-                signal= sid + "d" 
-                pirate.setSignal(signal)
+            signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
+            for j in range(6):
+                if ids == int(signalTeam[j*2:j*2+2]):
+                    signal = sid + "d" 
+                    pirate.setSignal(signal)
+    
+            
     
     # if s[0] == "myCaptured" and s[1] == "myCaptured" :
     #     if ids<=12:
@@ -440,8 +444,8 @@ def ActPirate(pirate):
     if pirate.getTeamSignal() != "":
         s = pirate.getTeamSignal()
         l = s.split(",")
-        x = int(l[0][1:])
-        y = int(l[1])
+        # x = int(l[0][1:])
+        # y = int(l[1])
     
     #     return moveTo(x, y, pirate)
 
@@ -472,7 +476,7 @@ def ActTeam(team):
     raw_string = team.getTeamSignal()
     new_string = raw_string[:12] + sig_alive + raw_string[48:]
     team.setTeamSignal(new_string)
-    # print(team.getListOfSignals())
+    print(team.getListOfSignals())
     # print(alive_players)    
     # print(team.getListOfSignals())
     # print(team.getDimensionX())

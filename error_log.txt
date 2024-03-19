@@ -1,7 +1,8 @@
 Traceback (most recent call last):
-  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 294, in run_game
-    self.__bscript.ActTeam(self.__blue_team)
-  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 382, in ActTeam
-    raw_string = pirate.getTeamSignal()
-                 ^^^^^^
-NameError: name 'pirate' is not defined
+  File "E:\repos\Team_Terminals\engine\main.py", line 302, in run_game
+    n = self.__bscript.ActPirate(pirate_i)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\repos\Team_Terminals\scriptblue.py", line 444, in ActPirate
+    y = int(l[1])
+            ~^^^
+IndexError: list index out of range
