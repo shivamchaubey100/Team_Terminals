@@ -2,10 +2,10 @@ Traceback (most recent call last):
   File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 302, in run_game
     n = self.__bscript.ActPirate(pirate_i)
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 404, in ActPirate
-    return attack1(pirate)
+  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 447, in ActPirate
+    return attack3(pirate)
            ^^^^^^^^^^^^^^^
-  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 255, in attack1
-    xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ValueError: invalid literal for int() with base 10: 'ss'
+  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 328, in attack3
+    if pirate.trackPlayers()[i-1] != 'myCaptured' and pirate.getTeamSignal()[61] != 'p':
+                                           ~~~~~~~~~~~~~~~~~~~~~~^^^^
+IndexError: string index out of range

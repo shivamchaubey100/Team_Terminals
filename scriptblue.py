@@ -276,6 +276,27 @@ def attack2(pirate):
         yopp=0
     y= (yopp+ymid)/2
     pos= pirate.getPosition()
+
+    if is_between(pos[0], xmid, xdep) and is_between(pos[1], ymid, yopp):
+        isnum= 0
+        for i in range(1,4):
+            if pirate.investigate_current()[0] == f'island{i}':
+                isnum= i
+        if isnum != 0: 
+            raw_string = pirate.getTeamSignal()       
+            if pirate.trackPlayers()[i-1] != 'myCaptured' and pirate.getTeamSignal()[59] != 'p':           
+                new_string = raw_string[:59] + f'p{isnum}' + raw_string[61:]           
+            else:
+                new_string = raw_string[:59] + f'c{isnum}' + raw_string[61:]                
+            pirate.setTeamSignal(new_string)
+            
+        
+        if len(pirate.getTeamSignal())>59 and pirate.getTeamSignal()[59] == 'p':
+            isnum= int(pirate.getTeamSignal()[60])
+            xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
+            ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
+            return moveTo(xcord, ycord, pirate)
+
     if is_between(pos[0], xmid, xdep) and is_between(pos[1], ymid,yopp):
         return spread(pirate)
     else:
@@ -296,6 +317,27 @@ def attack3(pirate):
         xopp=0
     x= (xopp+xmid)/2
     pos= pirate.getPosition()
+
+    if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid, ydep):
+        isnum= 0
+        for i in range(1,4):
+            if pirate.investigate_current()[0] == f'island{i}':
+                isnum= i
+        if isnum != 0: 
+            raw_string = pirate.getTeamSignal()       
+            if pirate.trackPlayers()[i-1] != 'myCaptured' and pirate.getTeamSignal()[61] != 'p':           
+                new_string = raw_string[:61] + f'p{isnum}' + raw_string[63:]           
+            else:
+                new_string = raw_string[:61] + f'c{isnum}' + raw_string[63:]                
+            pirate.setTeamSignal(new_string)
+            
+        
+        if len(pirate.getTeamSignal())>61 and pirate.getTeamSignal()[61] == 'p':
+            isnum= int(pirate.getTeamSignal()[62])
+            xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
+            ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
+            return moveTo(xcord, ycord, pirate)
+
     if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid,ydep):
         return spread(pirate)
     else:
@@ -402,7 +444,7 @@ def ActPirate(pirate):
     # print(island_coord3)
     # print(islandNameAndCoord(pirate))
 
-    return attack1(pirate)
+    return attack2(pirate)
 
     for i in range(1,4):
         if pirate.investigate_current()[0] == f"island{i}":
