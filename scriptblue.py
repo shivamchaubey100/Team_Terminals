@@ -212,81 +212,102 @@ def setIslandCoordinatesToTeamSignal(pirate):
         new_string = raw_string[:(island_number-1)*4] + strinG + raw_string[island_number*4:]
         pirate.setTeamSignal(new_string)           
 
-# def checkfriends(pirate , quad ):
-#     sum = 0 
-#     up = pirate.investigate_up()[1]
-#     #print(up)
-#     down = pirate.investigate_down()[1]
-#     left = pirate.investigate_left()[1]
-#     right = pirate.investigate_right()[1]
-#     ne = pirate.investigate_ne()[1]
-#     nw = pirate.investigate_nw()[1]
-#     se = pirate.investigate_se()[1]
-#     sw = pirate.investigate_sw()[1]
-    
-#     if(quad=='ne'):
-#         if(up == 'friend'):
-#             sum +=1 
-#         if(ne== 'friend'):
-#             sum +=1 
-#         if(right == 'friend'):
-#             sum +=1 
-#     if(quad=='se'):
-#         if(down == 'friend'):
-#             sum +=1 
-#         if(right== 'friend'):
-#             sum +=1 
-#         if(se == 'friend'):
-#             sum +=1 
-#     if(quad=='sw'):
-#         if(down == 'friend'):
-#             sum +=1 
-#         if(sw== 'friend'): 
-#             sum +=1 
-#         if(left == 'friend'):
-#             sum +=1 
-#     if(quad=='nw'):
-#         if(up == 'friend'):
-#             sum +=1 
-#         if(nw == 'friend'):
-#             sum +=1 
-#         if(left == 'friend'):
-#             sum +=1 
+def is_between(value, var1, var2):
+    lower_bound = min(var1, var2)
+    upper_bound = max(var1, var2)
+    return lower_bound <= value <= upper_bound
 
-#     return sum
-    
-# def spread(pirate):
-#     sw = checkfriends(pirate ,'sw' )
-#     se = checkfriends(pirate ,'se' )
-#     ne = checkfriends(pirate ,'ne' )
-#     nw = checkfriends(pirate ,'nw' )
-   
-#     my_dict = {'sw': sw, 'se': se, 'ne': ne, 'nw': nw}
-#     sorted_dict = dict(sorted(my_dict.items(), key=lambda item: item[1]))
+def attack1(pirate):
+    xmid= pirate.getDimensionX()/2
+    ymid= pirate.getDimensionY()/2
 
-#     x, y = pirate.getPosition()
+    xdep= pirate.getDeployPoint()[0]
+    ydep= pirate.getDeployPoint()[1]
+    if xdep==0:
+        xopp= xdep+ 2*xmid
+    else:
+        xopp= 0
     
-#     if( x == 0 , y == 0):
-#         return random.randint(1,4)
-    
-#     if(sorted_dict[list(sorted_dict())[3]] == 0 ):
-#         return random.randint(1,4)
-    
-#     if(list(sorted_dict())[0] == 'sw'):
-#         return moveTo(x-1 , y+1 , pirate)
-#     elif(list(sorted_dict())[0] == 'se'):
-#         return moveTo(x+1 , y+1 , pirate)
-#     elif(list(sorted_dict())[0] == 'ne'):
-#         return moveTo(x+1 , y-1 , pirate)
-#     elif(list(sorted_dict())[0] == 'nw'):
-#         return moveTo(x-1 , y-1 , pirate)
+    if ydep== 0:
+        yopp = ydep + 2*ymid
+    else:
+        yopp= 0
+    xmopp= (xopp+xmid)/2
+    ymopp= (yopp+ ymid)/2
 
+    pos= pirate.getPosition()
+
+    if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid, yopp):
+        isnum= 0
+        for i in range(1,4):
+            if pirate.investigate_current()[0] == f'island{i}':
+                isnum= i
+        if isnum != 0: 
+            raw_string = pirate.getTeamSignal()       
+            if pirate.trackPlayers()[i-1] != 'myCaptured' and pirate.getTeamSignal()[57] != 'p':           
+                new_string = raw_string[:57] + f'p{isnum}' + raw_string[59:]           
+            else:
+                new_string = raw_string[:57] + f'c{isnum}' + raw_string[59:]                
+            pirate.setTeamSignal(new_string)
+            
+        
+        if len(pirate.getTeamSignal())>57 and pirate.getTeamSignal()[57] == 'p':
+            isnum= int(pirate.getTeamSignal()[58])
+            xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
+            ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
+            return moveTo(xcord, ycord, pirate)
+    if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid, yopp):
+        return spread(pirate)
+    else:
+        return moveTo(xmopp, ymopp, pirate)
+
+def attack2(pirate):
+    xmid= pirate.getDimensionX()/2
+    ymid= pirate.getDimensionY()/2
+
+    xdep= pirate.getDeployPoint()[0]
+    ydep= pirate.getDeployPoint()[1]
+
+    x= (xdep+xmid)/2
+
+    if ydep==0:
+        yopp= pirate.getDimensionY()       
+    else:
+        yopp=0
+    y= (yopp+ymid)/2
+    pos= pirate.getPosition()
+    if is_between(pos[0], xmid, xdep) and is_between(pos[1], ymid,yopp):
+        return spread(pirate)
+    else:
+        return moveTo(x, y, pirate)
+
+def attack3(pirate):
+    xmid= pirate.getDimensionX()/2
+    ymid= pirate.getDimensionY()/2
+
+    xdep= pirate.getDeployPoint()[0]
+    ydep= pirate.getDeployPoint()[1]
+
+    y= (ydep+ymid)/2
+
+    if xdep==0:
+        xopp= pirate.getDimensionX()       
+    else:
+        xopp=0
+    x= (xopp+xmid)/2
+    pos= pirate.getPosition()
+    if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid,ydep):
+        return spread(pirate)
+    else:
+        return moveTo(x, y, pirate)
 
 def ActPirate(pirate):
 
     if pirate.getTeamSignal() == '':
-        pirate.setTeamSignal("00000000000000000000000000000000")
+        string= ''.zfill(100)
+        pirate.setTeamSignal(string)
 
+    print(pirate.getTeamSignal())
     setIslandCoordinatesToTeamSignal(pirate)
 
     up = pirate.investigate_up()[0]
@@ -296,24 +317,7 @@ def ActPirate(pirate):
     x, y = pirate.getPosition()
     pirate.setSignal("")
     s = pirate.trackPlayers()
-    # global island_coord1, island_coord2,   island_coord3
-    # island_coord1 = [0,0]
-    # island_coord2 = [0,0]
-    # island_coord3 = [0,0]
-    # if pirate.getID() == 1 and pirate.getCurrentFrame()==100:
-    #     return 0
-
-    # stop one of the pirates from moving if island is captured
-    # print(pirate.getID())
-    # if pirate.getID() == 1 and s[0] == "myCaptured":
-    #     print("pirate1 stopped")
-    #     return 0
-    # if pirate.getID() == 2 and s[1] == "myCaptured":
-    #     print("pirate2 stopped")
-    #     return 0
-    # if pirate.getID() == 3 and s[2] == "myCaptured":
-    #     print("pirate3 stopped")
-    #     return 0
+    
     ids= int(pirate.getID())
     #set the first string of the signal to be the pirate id, this will be used in team signals
     if 10<=ids<100:
@@ -334,39 +338,9 @@ def ActPirate(pirate):
                     signal = sid + "d" 
                     pirate.setSignal(signal)
     
-            
-    
-    # if s[0] == "myCaptured" and s[1] == "myCaptured" :
-    #     if ids<=12:
-    #         signal= sid + "d" 
-    #         pirate.setSignal(signal)
-        
-    # elif s[0]=="myCaptured" and s[2]=="myCaptured":
-    #         if ids<=6 or 18>=ids>12:
-    #             signal= sid + "d" 
-    #             pirate.setSignal(signal)
-
-    # elif s[1]=="myCaptured" and s[2]=="myCaptured":
-    #         if 18>=ids>6:
-    #             signal= sid + "d" 
-    #             pirate.setSignal(signal)    
-
-    # elif s[0]=="myCaptured":
-    #         if ids<=6 :
-    #             signal= sid + "d" 
-    #             pirate.setSignal(sig)
-
-    # elif s[1]=="myCaptured":
-    #         if 12>=ids>6:
-    #             signal= sid + "d" 
-    #             pirate.setSignal(signal)
-    # elif s[2]=="myCaptured":
-    #         if 18>=ids>12:
-    #             signal= sid + "d"
-    #             pirate.setSignal(signal)
-
     if pirate.getID() == '1':
         return moveTo(20,20,pirate)
+
     # if (
     #     (up == "island1" and s[0] != "myCaptured")
     #     or (up == "island2" and s[1] != "myCaptured")
@@ -427,6 +401,9 @@ def ActPirate(pirate):
     # print(island_coord2)
     # print(island_coord3)
     # print(islandNameAndCoord(pirate))
+
+    return attack1(pirate)
+
     for i in range(1,4):
         if pirate.investigate_current()[0] == f"island{i}":
             if pirate.trackPlayers()[i-1] != "myCaptured":
@@ -454,6 +431,9 @@ def ActPirate(pirate):
 
 
 def ActTeam(team):
+    if team.getTeamSignal() == '':
+        string= ''.zfill(100)
+        team.setTeamSignal(string)
     xdim = team.getDimensionX()
     ydim = team.getDimensionY()
     Mdim = (xdim, ydim)
@@ -476,14 +456,21 @@ def ActTeam(team):
     raw_string = team.getTeamSignal()
     new_string = raw_string[:12] + sig_alive + raw_string[48:]
     team.setTeamSignal(new_string)
-    print(team.getListOfSignals())
+
+    #Only for testing
+    raw_string = team.getTeamSignal()
+    new_string = raw_string[:48] + 'charaterss' + raw_string[57:]
+    team.setTeamSignal(new_string)
+
+
+    # print(team.getListOfSignals())
     # print(alive_players)    
     # print(team.getListOfSignals())
     # print(team.getDimensionX())
     team.buildWalls(1)
     team.buildWalls(2)
     team.buildWalls(3)
-    print(team.getTeamSignal())
+    # print(team.getTeamSignal())
     # print(team.trackPlayers())
     # if s:
     #     island_no = int(s[0])
