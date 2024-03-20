@@ -3,8 +3,39 @@ import math
 
 name = "scriptblue"
 
+def checkIsland(pirate):
+    up = pirate.investigate_up()[0]
+    down = pirate.investigate_down()[0]
+    left = pirate.investigate_left()[0]
+    right = pirate.investigate_right()[0]
+    ne = pirate.investigate_ne()[0]
+    nw = pirate.investigate_nw()[0]
+    se = pirate.investigate_se()[0]
+    sw = pirate.investigate_sw()[0]
+    if up[:-1] == 'island':
+        return [True, 1, up[-1]]
+    elif down[:-1] == 'island':
+        return [True, 2, down[-1]]
+    elif left[:-1] == 'island':
+        return [True, 3, left[-1]]
+    elif right[:-1] == 'island':
+        return [True, 4, right[-1]]
+    elif ne[:-1] == 'island':
+        return [True, 1, ne[-1]]
+    elif nw[:-1] == 'island':
+        return [True, 1, nw[-1]]
+    elif se[:-1] == 'island':
+        return [True, 2, se[-1]]
+    elif sw[:-1] == 'island':
+        return [True, 2, sw[-1]] 
+    else:
+        return [False]
 
 def moveTo(x, y, Pirate):
+    result = checkIsland(Pirate)
+    if len(result) > 1 and "myCaptured" not in Pirate.trackPlayers()[int(result[2])-1]:
+        return result[1]
+        
     position = Pirate.getPosition()
     if position[0] == x and position[1] == y:
         return 0
@@ -349,7 +380,7 @@ def ActPirate(pirate):
         string= ''.zfill(100)
         pirate.setTeamSignal(string)
 
-    print(pirate.getTeamSignal())
+    # print(pirate.getTeamSignal())
     setIslandCoordinatesToTeamSignal(pirate)
 
     up = pirate.investigate_up()[0]
@@ -370,13 +401,12 @@ def ActPirate(pirate):
         sid=str(ids)
     sig= sid+ "a"
     pirate.setSignal(sig)
-    ids= int(ids) 
-    
+
     for i in range(3):
         if s[i] == "myCaptured":
             signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
             for j in range(6):
-                if ids == int(signalTeam[j*2:j*2+2]):
+                if ids == signalTeam[j*2:j*2+2]:
                     signal = sid + "d" 
                     pirate.setSignal(signal)
     
@@ -444,7 +474,7 @@ def ActPirate(pirate):
     # print(island_coord3)
     # print(islandNameAndCoord(pirate))
 
-    return attack2(pirate)
+    # return attack2(pirate)
 
     for i in range(1,4):
         if pirate.investigate_current()[0] == f"island{i}":
@@ -457,7 +487,19 @@ def ActPirate(pirate):
             signal = pirate.getSignal()
             if(len(signal)== 4):
                 signal = signal[:4] + f'{random.randint(0,1)}'
+                # signal = signal + f'{random.randint(0,1) if signal[4] == '1' else ''} '
+                if signal[4] == '1':
+                    signal = signal + f'{random.randint(0,1)}'
                 pirate.setSignal(signal)
+                print(pirate.getSignal())
+            else:
+                if signal[4] == '0':
+                    return attack1(pirate)
+                elif signal[4] == '1':
+                    if signal[5] == '0':
+                        return attack2(pirate)
+                    elif signal[5] == '1':
+                        return attack3(pirate)
 
     
     if pirate.getTeamSignal() != "":
