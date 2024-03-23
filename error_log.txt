@@ -1,11 +1,7 @@
 Traceback (most recent call last):
-  File "E:\repos\Team_Terminals\engine\main.py", line 302, in run_game
-    n = self.__bscript.ActPirate(pirate_i)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\repos\Team_Terminals\scriptblue.py", line 414, in ActPirate
-    return moveTo(20,20,pirate)
-           ^^^^^^^^^^^^^^^^^^^^
-  File "E:\repos\Team_Terminals\scriptblue.py", line 36, in moveTo
-    if len(result) > 1 and result[2] not in Pirate.trackPlayers()[result[2]-1]:
-                                                                  ~~~~~~~~~^~
-TypeError: unsupported operand type(s) for -: 'str' and 'int'
+  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 294, in run_game
+    self.__bscript.ActTeam(self.__blue_team)
+  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 639, in ActTeam
+    if(team.getTeamSignal()[48]==0) :
+       ~~~~~~~~~~~~~~~~~~~~^^^^
+IndexError: string index out of range
