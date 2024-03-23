@@ -406,8 +406,8 @@ def ActPirate(pirate):
         if s[i] == "myCaptured":
             signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
             for j in range(6):
-                if ids == signalTeam[j*2:j*2+2]:
-                    signal = sid + "d" 
+                if sig[1:] == signalTeam[j*2:j*2+2]:
+                    signal = sid + "d"
                     pirate.setSignal(signal)
     
     if pirate.getID() == '1':
@@ -491,7 +491,6 @@ def ActPirate(pirate):
                 if signal[4] == '1':
                     signal = signal + f'{random.randint(0,1)}'
                 pirate.setSignal(signal)
-                print(pirate.getSignal())
             else:
                 if signal[4] == '0':
                     return attack1(pirate)
