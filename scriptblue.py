@@ -33,9 +33,6 @@ def checkIsland(pirate):
         return [False]
 
 def moveTo(x, y, Pirate):
-    result = checkIsland(Pirate)
-    if len(result) > 1 and "myCaptured" not in Pirate.trackPlayers()[int(result[2])-1]:
-        return result[1]
         
     position = Pirate.getPosition()
     if position[0] == x and position[1] == y:
@@ -288,7 +285,7 @@ def attack1(pirate):
             isnum= int(pirate.getTeamSignal()[58])
             xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
             ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
-            return moveTo(xcord, ycord, pirate)
+            # return moveTo(xcord, ycord, pirate)
     if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid, yopp):
         return spread(pirate)
     else:
@@ -328,7 +325,7 @@ def attack2(pirate):
             isnum= int(pirate.getTeamSignal()[60])
             xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
             ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
-            return moveTo(xcord, ycord, pirate)
+            # return moveTo(xcord, ycord, pirate)
 
     if is_between(pos[0], xmid, xdep) and is_between(pos[1], ymid,yopp):
         return spread(pirate)
@@ -369,7 +366,7 @@ def attack3(pirate):
             isnum= int(pirate.getTeamSignal()[62])
             xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
             ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
-            return moveTo(xcord, ycord, pirate)
+            # return moveTo(xcord, ycord, pirate)
 
     if is_between(pos[0], xmid, xopp) and is_between(pos[1], ymid,ydep):
         return spread(pirate)
@@ -406,11 +403,10 @@ def attack0(pirate):
             isnum= int(pirate.getTeamSignal()[64])
             xcord= int(pirate.getTeamSignal()[(isnum-1)*4:4*(isnum-1)+2])
             ycord= int(pirate.getTeamSignal()[4*(isnum-1)+2:4*(isnum-1)+4])        
-            return moveTo(xcord, ycord, pirate)
-
+            # return moveTo(xcord, ycord, pirate)
 
     if is_between(pos[0], xmid, xdep) and is_between(pos[1], ymid, ydep):
-        return spread(pirate)
+        return moveAround(pirate, x, y)
     else:
         return moveTo(x ,y, pirate)
 
@@ -535,14 +531,17 @@ def ActPirate(pirate):
     new_string = sig + raw_string[4:]
     pirate.setSignal(new_string)
 
+    teamSig= pirate.getTeamSignal()
     for i in range(3):
-        if s[i] == "myCaptured" or s[i] == "myCapturing":
+        if teamSig[i+48] == f'{i+1}':
             signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
             for j in range(6):
                 if sid[1:] == signalTeam[j*2:j*2+2]:
                     signal = sid + "d"
                     new_string = signal + raw_string[4:] 
                     pirate.setSignal(new_string)
+
+
 
     # if int(pirate.getID()) < 7:
     #     signal= sid+ "d"
@@ -618,14 +617,16 @@ def ActPirate(pirate):
     # print(islandNameAndCoord(pirate))
 
     # return attack2(pirate)
-    # print(pirate.getSignal())
-    for i in range(1,4):
-        if pirate.investigate_current()[0] == f"island{i}":
-            if pirate.trackPlayers()[i-1] != "myCaptured":
-                return 0
+    print(pirate.getSignal())
+    # for i in range(1,4):
+    #     if pirate.investigate_current()[0] == f"island{i}":
+    #         if pirate.trackPlayers()[i-1] != "myCaptured":
+    #             return 0
     
-    if "myCaptured" not in pirate.trackPlayers():
+    if teamSig[48] == '0' and teamSig[49] == '0' and teamSig[50] == '0':
         return attack0(pirate)
+    # if "myCaptured" not in pirate.trackPlayers():
+    #     return attack0(pirate)
     else:
         if(pirate.getSignal()[3] == 'a'):
             signal = pirate.getSignal()
@@ -695,23 +696,23 @@ def ActTeam(team):
     print(team.getTeamSignal())
     
     #below block of code (3 if statements) will set the team signal index 48,49 and 50 to the islands which we have captured or are attempting to capture    
-    if(team.getTeamSignal()[48]== '0') :
-        if (team.trackPlayers()[0]=='myCaptured' or team.trackPlayers()[0]=='myCapturing'):
+    if(team.getTeamSignal()[48]=='0') :
+        if (team.getTeamSignal()[0:4]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:48] + '1' + string[49:100] 
             team.setTeamSignal(sig)
 
     if(team.getTeamSignal()[49]=='0') :
-        if (team.trackPlayers()[1]=='myCaptured' or team.trackPlayers()[1]=='myCapturing'):
+        if (team.getTeamSignal()[4:8]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:49] + '2' + string[50:100] 
             team.setTeamSignal(sig)    
 
     if(team.getTeamSignal()[50]=='0') :
-        if (team.trackPlayers()[2]=='myCaptured' or team.trackPlayers()[2]=='myCapturing'):
+        if (team.getTeamSignal()[8:12]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:50] + '3' + string[51:100] 
-            team.setTeamSignal(sig)        
+            team.setTeamSignal(sig)
 
     get_my_status = team.getTeamSignal()
     status = team.trackPlayers()
@@ -749,12 +750,14 @@ def ActTeam(team):
         r3 = '0'
     
     #now build wall under certain conditions
-    if (r1==1 or (get_my_status[51]=='1' and r1=='4' ) or (get_my_status[51]=='5' and r1=='4')  ):
-        team.buildWalls(1)
-    if (r2==1 or (get_my_status[52]=='1' and r2=='4' ) or (get_my_status[52]=='5' and r2=='4')  ):
-        team.buildWalls(2)
-    if (r3==1 or (get_my_status[53]=='1' and r2=='4' ) or (get_my_status[53]=='5' and r3=='4')  ):
-        team.buildWalls(3)
+    
+    if team.getTotalGunpowder() < 500:
+        if (r1=='2' or (get_my_status[51]=='1' and r1=='4' ) or (get_my_status[51]=='5' and r1=='4') ):
+            team.buildWalls(1)
+        if (r2=='2' or (get_my_status[52]=='1' and r2=='4' ) or (get_my_status[52]=='5' and r2=='4')  ):
+            team.buildWalls(2)
+        if (r3=='2' or (get_my_status[53]=='1' and r2=='4' ) or (get_my_status[53]=='5' and r3=='4')  ):
+            team.buildWalls(3)
         
 
     

@@ -1,8 +1,11 @@
 Traceback (most recent call last):
-  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 307, in run_game
-    n = self.__bscript.ActPirate(pirate_i)
+  File "/Users/shivam/Documents/Team_Terminals/engine/main.py", line 311, in run_game
+    n = self.__rscript.ActPirate(pirate_i)
         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shivam/Documents/Team_Terminals/scriptblue.py", line 546, in ActPirate
-    if (pirate.getSignal()[3]=='d'):
-        ~~~~~~~~~~~~~~~~~~^^^
-IndexError: string index out of range
+  File "/Users/shivam/Documents/Team_Terminals/scriptred.py", line 138, in ActPirate
+    return spread(pirate)
+           ^^^^^^^^^^^^^^
+  File "/Users/shivam/Documents/Team_Terminals/scriptred.py", line 78, in spread
+    if(list(sorted_dict())[0] == 'sw'):
+            ^^^^^^^^^^^^^
+TypeError: 'dict' object is not callable
