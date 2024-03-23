@@ -552,7 +552,7 @@ def ActPirate(pirate):
 
 
     if (pirate.getSignal()[3]=='d'):
-        print(DenfenceFunction(pirate))
+        # print(DenfenceFunction(pirate))
         return DenfenceFunction(pirate)
 
     # if (
@@ -617,7 +617,7 @@ def ActPirate(pirate):
     # print(islandNameAndCoord(pirate))
 
     # return attack2(pirate)
-    print(pirate.getSignal())
+    # print(pirate.getSignal())
     # for i in range(1,4):
     #     if pirate.investigate_current()[0] == f"island{i}":
     #         if pirate.trackPlayers()[i-1] != "myCaptured":
@@ -636,7 +636,7 @@ def ActPirate(pirate):
                 if signal[4] == '1':
                     signal = signal + f'{random.randint(1,2)}'
                 pirate.setSignal(signal)
-                print(pirate.getSignal())
+                # print(pirate.getSignal())
             else:
                 if signal[4] == '2':
                     return attack1(pirate)
@@ -693,7 +693,7 @@ def ActTeam(team):
     new_string = raw_string[:12] + sig_alive + raw_string[48:]
     team.setTeamSignal(new_string)
     # print(new_string)
-    print(team.getTeamSignal())
+    # print(team.getTeamSignal())
     
     #below block of code (3 if statements) will set the team signal index 48,49 and 50 to the islands which we have captured or are attempting to capture    
     if(team.getTeamSignal()[48]=='0') :
