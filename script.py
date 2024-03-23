@@ -270,19 +270,19 @@ def ActTeam(team):
     
     #below block of code (3 if statements) will set the team signal index 48,49 and 50 to the islands which we have captured or are attempting to capture    
     if(team.getTeamSignal()[48]=='0') :
-        if (team.trackPlayers()[0]=='myCaptured' or team.trackPlayers()[0]=='myCapturing'):
+        if (team.getTeamSignal()[0:4]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:48] + '1' + string[49:100] 
             team.setTeamSignal(sig)
 
     if(team.getTeamSignal()[49]=='0') :
-        if (team.trackPlayers()[1]=='myCaptured' or team.trackPlayers()[1]=='myCapturing'):
+        if (team.getTeamSignal()[4:8]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:49] + '2' + string[50:100] 
             team.setTeamSignal(sig)    
 
     if(team.getTeamSignal()[50]=='0') :
-        if (team.trackPlayers()[2]=='myCaptured' or team.trackPlayers()[2]=='myCapturing'):
+        if (team.getTeamSIgnal()[8:12]!='0000'):
             string = team.getTeamSignal()
             sig = string[0:50] + '3' + string[51:100] 
             team.setTeamSignal(sig)        
