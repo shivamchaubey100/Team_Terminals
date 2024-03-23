@@ -502,6 +502,9 @@ def attack0(pirate):
 
 def ActPirate(pirate):
 
+    if (pirate.getSignal( )== ''):
+        string = ''.zfill(100)
+        pirate.setSignal(string)
 
     # print(pirate.getTeamSignal())
     setIslandCoordinatesToTeamSignal(pirate)
@@ -511,38 +514,44 @@ def ActPirate(pirate):
     left = pirate.investigate_left()[0]
     right = pirate.investigate_right()[0]
     x, y = pirate.getPosition()
-    pirate.setSignal("")
+    
     s = pirate.trackPlayers()
     
     ids= int(pirate.getID())
     #set the first string of the signal to be the pirate id, this will be used in team signals
+    
+    raw_string = pirate.getSignal()
+    
+    
     if 10<=ids<100:
         sid="0"+ str(ids)
     elif ids<10:
         sid="00"+ str(ids)
     else:
         sid=str(ids)
-    sig= sid+ "a"
-    pirate.setSignal(sig)
+    sig= sid+ "a" 
+    new_string = sig + raw_string[4:]
+    pirate.setSignal(new_string)
 
     for i in range(3):
         if s[i] == "myCaptured":
             signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
             for j in range(6):
                 if sid[1:] == signalTeam[j*2:j*2+2]:
-                    signal = sid + "d" 
-                    pirate.setSignal(signal)
-    
+                    signal = sid + "d"
+                    new_string = signal + raw_string[4:] 
+                    pirate.setSignal(new_string)
+
     # if int(pirate.getID()) < 7:
     #     signal= sid+ "d"
     #     pirate.setSignal(signal)
-
+    # print(pirate.getSignal())
     # if(pirate.getSignal()[3]=='d'):
     #     print(pirate.getSignal())
 
 
-    if (pirate.getSignal()[3]=='d'):
-        return DenfenceFunction(pirate)
+    # if (pirate.getSignal()[3]=='d'):
+    #     return DenfenceFunction(pirate)
 
     # if (
     #     (up == "island1" and s[0] != "myCaptured")
@@ -606,30 +615,32 @@ def ActPirate(pirate):
     # print(islandNameAndCoord(pirate))
 
     # return attack2(pirate)
-
+    print(pirate.getSignal())
     for i in range(1,4):
         if pirate.investigate_current()[0] == f"island{i}":
             if pirate.trackPlayers()[i-1] != "myCaptured":
                 return 0
+    
     if "myCaptured" not in pirate.trackPlayers():
         return spread(pirate)
     else:
         if(pirate.getSignal()[3] == 'a'):
             signal = pirate.getSignal()
-            if(len(signal)== 4):
-                signal = signal[:4] + f'{random.randint(0,1)}'
+            if(pirate.getSignal()[4]== '0'):
+                signal = signal[:4] + f'{random.randint(1,2)}'
                 # signal = signal + f'{random.randint(0,1) if signal[4] == '1' else ''} '
                 if signal[4] == '1':
-                    signal = signal + f'{random.randint(0,1)}'
+                    signal = signal + f'{random.randint(1,2)}'
                 pirate.setSignal(signal)
                 print(pirate.getSignal())
             else:
-                if signal[4] == '0':
+                if signal[4] == '2':
+                    print("attack1")
                     return attack1(pirate)
                 elif signal[4] == '1':
-                    if signal[5] == '0':
+                    if signal[5] == '1':
                         return attack2(pirate)
-                    elif signal[5] == '1':
+                    elif signal[5] == '2':
                         return attack3(pirate)
 
     
@@ -642,7 +653,7 @@ def ActPirate(pirate):
     #     return moveTo(x, y, pirate)
 
     # else:
-    return random.randint(1, 4)
+    # return random.randint(1, 4)
 
 
 def ActTeam(team):
@@ -679,7 +690,7 @@ def ActTeam(team):
     new_string = raw_string[:12] + sig_alive + raw_string[48:]
     team.setTeamSignal(new_string)
     # print(new_string)
-    print(team.getTeamSignal())
+    # print(team.getTeamSignal())
     
     #below block of code (3 if statements) will set the team signal index 48,49 and 50 to the islands which we have captured or are attempting to capture    
     if(team.getTeamSignal()[48]==0) :
