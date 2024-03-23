@@ -525,20 +525,20 @@ def ActPirate(pirate):
     sig= sid+ "a"
     pirate.setSignal(sig)
 
-    # for i in range(3):
-    #     if s[i] == "myCaptured":
-    #         signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
-    #         for j in range(6):
-    #             if ids == signalTeam[j*2:j*2+2]:
-    #                 signal = sid + "d" 
-    #                 pirate.setSignal(signal)
+    for i in range(3):
+        if s[i] == "myCaptured":
+            signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
+            for j in range(6):
+                if sid[1:] == signalTeam[j*2:j*2+2]:
+                    signal = sid + "d" 
+                    pirate.setSignal(signal)
     
-    if int(pirate.getID()) < 7:
-        signal= sid+ "d"
-        pirate.setSignal(signal)
+    # if int(pirate.getID()) < 7:
+    #     signal= sid+ "d"
+    #     pirate.setSignal(signal)
 
-    if(pirate.getSignal()[3]=='d'):
-        print(pirate.getSignal())
+    # if(pirate.getSignal()[3]=='d'):
+    #     print(pirate.getSignal())
 
 
     if (pirate.getSignal()[3]=='d'):
@@ -622,7 +622,7 @@ def ActPirate(pirate):
                 if signal[4] == '1':
                     signal = signal + f'{random.randint(0,1)}'
                 pirate.setSignal(signal)
-                # print(pirate.getSignal())
+                print(pirate.getSignal())
             else:
                 if signal[4] == '0':
                     return attack1(pirate)
