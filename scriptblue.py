@@ -3,92 +3,6 @@ import math
 
 name = "scriptblue"
 
-def select_movement(x0, y0, x1, y1, factor=0.1):
-    # Calculate differences
-    dx = -( x0 - x1)
-    dy = -(y0 - y1)
-
-    # Calculate probabilities based on exponential of differences
-    prob_decrease_y = math.exp(factor*dy)
-    prob_increase_x = math.exp(factor*dx)
-    prob_increase_y = math.exp(-factor*dy)
-    prob_decrease_x = math.exp(-factor*dx)
-
-    # Normalize probabilities
-    total_prob = prob_decrease_y + prob_increase_x + prob_increase_y + prob_decrease_x
-    prob_decrease_y /= total_prob
-    prob_increase_x /= total_prob
-    prob_increase_y /= total_prob
-    prob_decrease_x /= total_prob
-
-    # Randomly select a movement based on probabilities
-    rand = random.uniform(0, 1)
-    if rand < prob_decrease_y:
-        return 1
-    elif rand < prob_decrease_y + prob_increase_x:
-        return 4
-    elif rand < prob_decrease_y + prob_increase_x + prob_increase_y:
-        return 3
-    else:
-        return 2
-
-#this function will make the pirate move around the given coordinates
-def moveAround(pirate,x0, y0, factor=0.1) :
-    (x1,y1) = pirate.getPosition()
-    #issue resolved: if the pirate is at the centre then it will take the next step randomly
-    return select_movement(x0,y0,x1,y1,factor)
-
-def DenfenceFunction(pirate):
-
-    #to implement: prevent all the functions from returning move which takes them towars wall when they are adjacent to a wall
-    if (pirate.getSignal()[3]=='d'):
-        raw_string = pirate.getTeamSignal()
-        
-        if (raw_string[48]=='1'):
-                #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
-            defender_ids = pirate.getTeamSignal()[12:24]
-                #so defender_ids will be a string of length 12
-                #extracting individual ids of each pirate
-            for i in range(0,12,2):
-                if (int(pirate.getID())==int(defender_ids[i:i+2])) :
-                    island_coords = pirate.getTeamSignal()[0:4]
-                    x0 = int(island_coords[0:2])
-                    y0 = int(island_coords[2:4])
-                    if (pirate.trackPlayers()[0]!='myCaptured'):
-                        return moveAround(pirate,x0,y0,10) #tell the pirates to converge around when their designated island is out of reach
-                    else: 
-                        return moveAround(pirate,x0,y0)
-                    
-        if (raw_string[49]==2):
-            #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
-            defender_ids = pirate.getTeamSignal()[24:36]
-            #so defender_ids will be a string of length 12
-            #extracting individual ids of each pirate
-            for i in range(0,12,2):
-                if (int(pirate.getID())==int(defender_ids[i:i+2])) :
-                    island_coords = pirate.getTeamSignal()[4:8]
-                    x0 = int(island_coords[0:2])
-                    y0 = int(island_coords[2:4])
-                    if (pirate.trackPlayers()[1]!='myCaptured'):
-                        return moveAround(pirate,x0,y0,10)
-                    else: 
-                        return moveAround(pirate,x0,y0)                                  
-
-        if (raw_string[50]==3):
-                #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
-                defender_ids = pirate.getTeamSignal()[36:48]
-                #so defender_ids will be a string of length 12
-                #extracting individual ids of each pirate
-                for i in range(0,12,2):
-                    if (int(pirate.getID())==int(defender_ids[i:i+2])) :
-                        island_coords = pirate.getTeamSignal()[8:12]
-                        x0 = int(island_coords[0:2])
-                        y0 = int(island_coords[2:4])
-                        if (pirate.trackPlayers()[2]!='myCaptured'):
-                            return moveAround(pirate,x0,y0,10)
-                        else: 
-                            return moveAround(pirate,x0,y0)                         
-
 
 def checkIsland(pirate):
     up = pirate.investigate_up()[0]
@@ -500,6 +414,94 @@ def attack0(pirate):
     else:
         return moveTo(x ,y, pirate)
 
+
+def select_movement(x0, y0, x1, y1, factor=0.1):
+    # Calculate differences
+    dx = -( x0 - x1)
+    dy = -(y0 - y1)
+
+    # Calculate probabilities based on exponential of differences
+    prob_decrease_y = math.exp(factor*dy)
+    prob_increase_x = math.exp(factor*dx)
+    prob_increase_y = math.exp(-factor*dy)
+    prob_decrease_x = math.exp(-factor*dx)
+
+    # Normalize probabilities
+    total_prob = prob_decrease_y + prob_increase_x + prob_increase_y + prob_decrease_x
+    prob_decrease_y /= total_prob
+    prob_increase_x /= total_prob
+    prob_increase_y /= total_prob
+    prob_decrease_x /= total_prob
+
+    # Randomly select a movement based on probabilities
+    rand = random.uniform(0, 1)
+    if rand < prob_decrease_y:
+        return 1
+    elif rand < prob_decrease_y + prob_increase_x:
+        return 4
+    elif rand < prob_decrease_y + prob_increase_x + prob_increase_y:
+        return 3
+    else:
+        return 2
+
+#this function will make the pirate move around the given coordinates
+def moveAround(pirate,x0, y0, factor=0.1) :
+    (x1,y1) = pirate.getPosition()
+    #issue resolved: if the pirate is at the centre then it will take the next step randomly
+    return select_movement(x0,y0,x1,y1,factor)
+
+def DenfenceFunction(pirate):
+
+    #to implement: prevent all the functions from returning move which takes them towars wall when they are adjacent to a wall
+    if (pirate.getSignal()[3]=='d'):
+        raw_string = pirate.getTeamSignal()
+        
+        if (raw_string[48]=='1'):
+                #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
+            defender_ids = pirate.getTeamSignal()[12:24]
+                #so defender_ids will be a string of length 12
+                #extracting individual ids of each pirate
+            for i in range(0,12,2):
+                if (int(pirate.getID())==int(defender_ids[i:i+2])) :
+                    island_coords = pirate.getTeamSignal()[0:4]
+                    x0 = int(island_coords[0:2])
+                    y0 = int(island_coords[2:4])
+                    if (pirate.trackPlayers()[0]!='myCaptured'):
+                        return moveAround(pirate,x0,y0,10) #tell the pirates to converge around when their designated island is out of reach
+                    else: 
+                        return moveAround(pirate,x0,y0)
+                    
+        if (raw_string[49]== '2'):
+            #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
+            defender_ids = pirate.getTeamSignal()[24:36]
+            #so defender_ids will be a string of length 12
+            #extracting individual ids of each pirate
+            for i in range(0,12,2):
+                if (int(pirate.getID())==int(defender_ids[i:i+2])) :
+                    island_coords = pirate.getTeamSignal()[4:8]
+                    x0 = int(island_coords[0:2])
+                    y0 = int(island_coords[2:4])
+                    if (pirate.trackPlayers()[1]!='myCaptured'):
+                        return moveAround(pirate,x0,y0,10)
+                    else: 
+                        return moveAround(pirate,x0,y0)                                  
+
+        if (raw_string[50]== '3'):
+                #it is expected that the team signals are stored in such a way that the characters from index 12 to 47 belong to the ids of first 
+                defender_ids = pirate.getTeamSignal()[36:48]
+                #so defender_ids will be a string of length 12
+                #extracting individual ids of each pirate
+                for i in range(0,12,2):
+                    if (int(pirate.getID())==int(defender_ids[i:i+2])) :
+                        island_coords = pirate.getTeamSignal()[8:12]
+                        x0 = int(island_coords[0:2])
+                        y0 = int(island_coords[2:4])
+                        if (pirate.trackPlayers()[2]!='myCaptured'):
+                            return moveAround(pirate,x0,y0,10)
+                        else: 
+                            return moveAround(pirate,x0,y0)                         
+
+
 def ActPirate(pirate):
 
     if (pirate.getSignal( )== ''):
@@ -534,7 +536,7 @@ def ActPirate(pirate):
     pirate.setSignal(new_string)
 
     for i in range(3):
-        if s[i] == "myCaptured":
+        if s[i] == "myCaptured" or s[i] == "myCapturing":
             signalTeam = pirate.getTeamSignal()[12+12*i:12+12*(i+1)]
             for j in range(6):
                 if sid[1:] == signalTeam[j*2:j*2+2]:
@@ -550,8 +552,9 @@ def ActPirate(pirate):
     #     print(pirate.getSignal())
 
 
-    # if (pirate.getSignal()[3]=='d'):
-    #     return DenfenceFunction(pirate)
+    if (pirate.getSignal()[3]=='d'):
+        print(DenfenceFunction(pirate))
+        return DenfenceFunction(pirate)
 
     # if (
     #     (up == "island1" and s[0] != "myCaptured")
@@ -615,14 +618,14 @@ def ActPirate(pirate):
     # print(islandNameAndCoord(pirate))
 
     # return attack2(pirate)
-    print(pirate.getSignal())
+    # print(pirate.getSignal())
     for i in range(1,4):
         if pirate.investigate_current()[0] == f"island{i}":
             if pirate.trackPlayers()[i-1] != "myCaptured":
                 return 0
     
     if "myCaptured" not in pirate.trackPlayers():
-        return spread(pirate)
+        return attack0(pirate)
     else:
         if(pirate.getSignal()[3] == 'a'):
             signal = pirate.getSignal()
@@ -635,7 +638,6 @@ def ActPirate(pirate):
                 print(pirate.getSignal())
             else:
                 if signal[4] == '2':
-                    print("attack1")
                     return attack1(pirate)
                 elif signal[4] == '1':
                     if signal[5] == '1':
@@ -690,22 +692,22 @@ def ActTeam(team):
     new_string = raw_string[:12] + sig_alive + raw_string[48:]
     team.setTeamSignal(new_string)
     # print(new_string)
-    # print(team.getTeamSignal())
+    print(team.getTeamSignal())
     
     #below block of code (3 if statements) will set the team signal index 48,49 and 50 to the islands which we have captured or are attempting to capture    
-    if(team.getTeamSignal()[48]==0) :
+    if(team.getTeamSignal()[48]== '0') :
         if (team.trackPlayers()[0]=='myCaptured' or team.trackPlayers()[0]=='myCapturing'):
             string = team.getTeamSignal()
             sig = string[0:48] + '1' + string[49:100] 
             team.setTeamSignal(sig)
 
-    if(team.getTeamSignal()[49]==0) :
+    if(team.getTeamSignal()[49]=='0') :
         if (team.trackPlayers()[1]=='myCaptured' or team.trackPlayers()[1]=='myCapturing'):
             string = team.getTeamSignal()
             sig = string[0:49] + '2' + string[50:100] 
             team.setTeamSignal(sig)    
 
-    if(team.getTeamSignal()[50]==0) :
+    if(team.getTeamSignal()[50]=='0') :
         if (team.trackPlayers()[2]=='myCaptured' or team.trackPlayers()[2]=='myCapturing'):
             string = team.getTeamSignal()
             sig = string[0:50] + '3' + string[51:100] 
